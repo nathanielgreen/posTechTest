@@ -1,29 +1,33 @@
-function POS(){
+function Checkout(){
   this.totalPrice = 0;
+  this.pricing = {'A':25, 'B':40, 'P':30} 
   this.priceArr = new Array();
   this.finalOrder = []
 };
 
-POS.prototype.checkout = function(order, pricing){
+Checkout.prototype.scan = function(order){
   if (this.threeForOne(order)){
-    this.priceLoop(order, pricing);
+    this.priceLoop(order);
     this.totalPrice -= 20;
   }
-  else if (this.twoGetThirdFree) {
-    this.priceLoop(order, pricing);  
+  else if (this.twoGetThirdFree(order)){
+    this.priceLoop(order);  
     this.finalOrder.push('A');
   } 
   else {
-    this.priceLoop(order, pricing);
+    this.priceLoop(order);
   };
+  this.calculateTotalPrice();
+};
 
+Checkout.prototype.calculateTotalPrice = function(){
   for (i = 0; i < this.priceArr.length; i++){
     this.totalPrice += parseInt(this.priceArr[i]);
   };
 };
 
 
-POS.prototype.threeForOne = function(order){
+Checkout.prototype.threeForOne = function(order){
   var counter = 0;
   for (var i = 0; i < order.length; i++) {
     if (order[i] === 'B'){
@@ -36,33 +40,27 @@ POS.prototype.threeForOne = function(order){
 };
 
 
-POS.prototype.twoGetThirdFree = function(){
+Checkout.prototype.twoGetThirdFree = function(order){
   var counter = 0;
   for (var i = 0; i < order.length; i++) {
     if (order[i] === 'A'){
       counter++
     }
   };
-  if (counter == 2) {
+  if (counter === 2) {
    return true
   }; 
 };
 
 
-POS.prototype.priceLoop = function(order, pricing){
+Checkout.prototype.priceLoop = function(order){
   this.finalOrder.push(order.join("', '"));
   for (i = 0; i < order.length; i++){
-    this.priceArr.push(pricing[order[i]]);
+    this.priceArr.push(this.pricing[order[i]]);
   };
 };
 
-
-
-// function Checkout(){
-// 
-// };
-// 
-// Checkout.prototype.scan = function(itemCode){
-// 
-// };
+Checkout.prototype.total = function(){
+  return this.totalPrice;
+};
 
